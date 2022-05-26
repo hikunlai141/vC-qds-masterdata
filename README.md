@@ -104,6 +104,40 @@
     在晚上11点的时候，数据终于全量同步完了。
     ![img_3.png](img_3.png)
 ###### PS: 做事还是不够认真，考虑问题不够全面。做技术的，菜才是原罪。
+##### 其他问题：postgresql
+    /**创建单列唯一约束**/
+    alter table sys_md_material drop constraint material_no_key;
+    alter table sys_md_material add constraint material_no_key unique (material_no);
+    /**创建多列唯一索引约束**/
+    alter table sys_md_material_logicalplant drop constraint material_no_logic_plant_code_key;
+    alter table sys_md_material_logicalplant add constraint  material_no_logic_plant_code_key unique (material_no,logic_plant_code);
+    
+    
+    /** 创建索引
+    [
+    postgrepSql可以在Btree索引上指定操作符。
+    text_pattern_ops 对应 text
+    varchar_pattern_ops 对应 varchar
+    bpchar_pattern_ops 对应 char
+    ]
+    **/
+    CREATE INDEX index_material_no ON sys_md_material (material_no varchar_pattern_ops);
+    CREATE INDEX index_material_description_cn ON sys_md_material (material_description_cn varchar_pattern_ops);			 
+    CREATE INDEX index_material_description_en ON sys_md_material (material_description_en varchar_pattern_ops);
+    
+    /**
+    PS:postgresql mybatis。 concat不走索引。
+    explain ANALYZE
+    select sys_md_material.tid as tid, sys_md_material.material_no as materialNo, sys_md_material.material_description_cn as materialDescriptionCn, sys_md_material.material_description_en as materialDescriptionEn, sys_md_material.material_type as materialType, sys_md_material.basic_name as basicName, sys_md_material.base_unit as baseUnit, sys_md_material.material_group as materialGroup, sys_md_material.net_weight as netWeight, sys_md_material.gross_weight as grossWeight, sys_md_material.weight_unit as weightUnit, sys_md_material.size as size, sys_md_material.upc as upc, sys_md_material.is_deleted as isDeleted, sys_md_material.create_by as createBy, sys_md_material.create_time as createTime, sys_md_material.modify_by as modifyBy, sys_md_material.modify_time as modifyTime from sys_md_material where is_deleted = 0
+    --	and sys_md_material.material_no like concat('123456','%')
+    --	and UPPER(sys_md_material.material_no) LIKE UPPER( '123456'|| '%');
+    and
+    (
+    sys_md_material.material_no  like   '123456' || '%'
+    or  sys_md_material.material_description_cn like  '123456' || '%'  
+    or  sys_md_material.material_description_en like  '123456' || '%'
+    );
+    **/
     
 
     
