@@ -138,7 +138,15 @@
     or  sys_md_material.material_description_en like  '123456' || '%'
     );
     **/
-    
-
+   mybatis写法：
+          <if test="material != null and material != '' ">
+                and(
+                sys_md_material.material_description_en like  '${material}%'
+                or
+                sys_md_material.material_description_cn like '${material}%'
+                or
+                sys_md_material.material_no like '${material}%'
+                )
+            </if>
     
  
