@@ -104,7 +104,7 @@
     在晚上11点的时候，数据终于全量同步完了。
     ![img_3.png](img_3.png)
 ###### PS: 做事还是不够认真，考虑问题不够全面。做技术的，菜才是原罪。
-##### 其他问题：postgresql
+##### 其他问题：postgresql索引和约束
     /**创建单列唯一约束**/
     alter table sys_md_material drop constraint material_no_key;
     alter table sys_md_material add constraint material_no_key unique (material_no);
@@ -138,8 +138,9 @@
     or  sys_md_material.material_description_en like  '123456' || '%'
     );
     **/
-   mybatis写法：
-          <if test="material != null and material != '' ">
+##### 其他问题：mybatis
+   mybatis使用索引写法：
+            <if test="material != null and material != '' ">
                 and(
                 sys_md_material.material_description_en like  '${material}%'
                 or
